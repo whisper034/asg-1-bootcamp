@@ -6,14 +6,32 @@ struct Node {
   struct Node *next;
 };
  
+void push(struct Node **head_ref, int new_data);
+int detectLoop(struct Node *list);
+ 
+int main() {
+  struct Node *head = NULL;
+ 
+  push(&head, 300);
+  push(&head, 255);
+  push(&head, 400);
+  push(&head, 1000);
+ 
+  // loop
+  head->next->next->next->next = head;
+ 
+  (detectLoop(head)) ? puts("Loop found") : puts("No Loop");
+  return 0;
+}
+
 void push(struct Node** head_ref, int new_data) {
   struct Node *new_node = (struct Node*)malloc(sizeof(struct Node));
   new_node->data = new_data;
   new_node->next = (*head_ref);
   (*head_ref) = new_node;
 }
- 
-int detectLoop(struct Node* list) {
+
+int detectLoop(struct Node *list) {
   struct Node *slow_p = list, *fast_p = list;
   while(slow_p && fast_p && fast_p->next) {
     slow_p = slow_p->next;
@@ -23,19 +41,4 @@ int detectLoop(struct Node* list) {
     }
   }
   return 0;
-}
- 
-int main() {
-    struct Node *head = NULL;
- 
-    push(&head, 20);
-    push(&head, 4);
-    push(&head, 15);
-    push(&head, 10);
- 
-    // loop
-    head->next->next->next->next = head;
- 
-    (detectLoop(head)) ? puts("Loop found") : puts("No Loop");
-    return 0;
 }

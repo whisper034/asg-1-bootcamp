@@ -1,3 +1,5 @@
+//Source: gfg
+
 #include<stdio.h> 
 #include<stdlib.h> 
 #include<assert.h> 
@@ -7,30 +9,18 @@ struct Node {
   struct Node *next; 
 }; 
   
-/* pull off the front node of the source and put it in dest */
 void MoveNode(struct Node **destRef, struct Node **sourceRef); 
   
-/* Takes two lists sorted in increasing order, and splices 
-   their nodes together to make one big sorted list which 
-   is returned.  */
-struct Node* SortedMerge(struct Node *a, struct Node *b) { 
-  /* a dummy first node to hang the result on */
-  struct Node dummy; 
-  
-  /* tail points to the last result node  */
-  struct Node *tail = &dummy; 
-  
-  /* so tail->next is the place to add new nodes 
-    to the result. */
+struct Node *SortedMerge(struct Node *a, struct Node *b) { 
+  struct Node dummy;
+  struct Node *tail = &dummy;
   dummy.next = NULL; 
   while(1) { 
-    if(a == NULL) { 
-      /* if either list runs out, use the 
-          other list */
+    if(!a) {
       tail->next = b; 
       break; 
     } 
-    else if(b == NULL) {
+    else if(!b) {
       tail->next = a; 
       break; 
     }
@@ -41,77 +31,25 @@ struct Node* SortedMerge(struct Node *a, struct Node *b) {
   } 
   return(dummy.next); 
 } 
-  
-/* UTILITY FUNCTIONS */
-/* MoveNode() function takes the node from the front of the 
-   source, and move it to the front of the dest. 
-   It is an error to call this with the source list empty. 
-  
-   Before calling MoveNode(): 
-   source == {1, 2, 3} 
-   dest == {1, 2, 3} 
-  
-   After calling MoveNode(): 
-   source == {2, 3} 
-   dest == {1, 1, 2, 3} */
-void MoveNode(struct Node **destRef, struct Node **sourceRef) { 
-  /* the front source node  */
-  struct Node *newNode = *sourceRef; 
-  assert(newNode != NULL); 
-  
-  /* Advance the source pointer */
-  *sourceRef = newNode->next; 
-  
-  /* Link the old dest off the new node */
-  newNode->next = *destRef; 
-  
-  /* Move dest to point to the new node */
-  *destRef = newNode; 
-} 
-  
-  
-/* Function to insert a node at the beginging of the 
-   linked list */
-void push(struct Node **head_ref, int new_data) 
-{ 
-  /* allocate node */
-  struct Node *new_node = (struct Node*)malloc(sizeof(struct Node)); 
-  
-  /* put in the data  */
-  new_node->data  = new_data; 
-  
-  /* link the old list off the new node */
-  new_node->next = (*head_ref); 
-  
-  /* move the head to point to the new node */
-  (*head_ref)    = new_node; 
-} 
-  
-/* Function to print nodes in a given linked list */
-void printList(struct Node *node) { 
-  while(node) { 
-    printf("%d ", node->data); 
-    node = node->next; 
-  } 
-} 
-  
-/* Driver program to test above functions*/
-int main() { 
-  /* Start with the empty list */
+
+void MoveNode(struct Node **destRef, struct Node **sourceRef);
+void push(struct Node **head_ref, int new_data);
+void printList(struct Node *node);
+
+int main() {
   struct Node *res = NULL; 
   struct Node *a = NULL; 
   struct Node *b = NULL; 
   
-  /* Let us create two sorted linked lists to test 
-    the functions 
-    Created lists, a: 5->10->15,  b: 2->3->20 */
-  push(&a, 15); 
-  push(&a, 10); 
-  push(&a, 5);
+  //sorted
+  // a: 25->50->100,  b: 1->5->1000
+  push(&a, 100); 
+  push(&a, 50); 
+  push(&a, 25);
   
-  push(&b, 20); 
-  push(&b, 3); 
-  push(&b, 2); 
+  push(&b, 1000); 
+  push(&b, 5); 
+  push(&b, 1); 
   
   res = SortedMerge(a, b);
   
@@ -119,4 +57,26 @@ int main() {
   printList(res); 
   
   return 0; 
-} 
+}
+
+void printList(struct Node *node) { 
+  while(node) { 
+    printf("%d ", node->data); 
+    node = node->next; 
+  } 
+}
+
+void push(struct Node **head_ref, int new_data) {
+  struct Node *new_node = (struct Node*)malloc(sizeof(struct Node)); 
+  new_node->data  = new_data; 
+  new_node->next = (*head_ref);
+  (*head_ref)    = new_node; 
+}
+
+void MoveNode(struct Node **destRef, struct Node **sourceRef) { 
+  struct Node *newNode = *sourceRef; 
+  assert(newNode != NULL);
+  *sourceRef = newNode->next;
+  newNode->next = *destRef;
+  *destRef = newNode; 
+}
